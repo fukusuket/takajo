@@ -77,14 +77,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Create PDF
-        if: matrix.os == 'macos-latest'
-        run: |
-          npm i -g md-to-pdf
-          md-to-pdf ./*.md --md-file-encoding utf-8
-          mv ./README.pdf ./README-${{ github.event.inputs.release_ver }}-English.pdf
-          mv ./README-Japanese.pdf ./README-${{ github.event.inputs.release_ver }}-Japanese.pdf
-
       - name: Set Artifact Name
         id: set_artifact_name
         shell: bash
@@ -100,10 +92,25 @@ jobs:
               echo "artifact_name=takajo-${{ github.event.inputs.release_ver }}-mac-intel" >> $GITHUB_OUTPUT ;;
           esac
 
-      - name: Upload Artifact
+      - name: Upload Zip Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.set_artifact_name.outputs.artifact_name }}
           path: |
             **/*.zip
+
+      - name: Create PDF
+        if: matrix.os == 'macos-latest'
+        run: |
+          npm i -g md-to-pdf
+          md-to-pdf ./*.md --md-file-encoding utf-8
+          mv ./README.pdf ./README-${{ github.event.inputs.release_ver }}-English.pdf
+          mv ./README-Japanese.pdf ./README-${{ github.event.inputs.release_ver }}-Japanese.pdf
+
+      - name: Upload Document Artifact
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: documents
+          path: |
             ./*.pdf
