@@ -106,6 +106,8 @@ jobs:
           md-to-pdf ./*.md --md-file-encoding utf-8
           mv ./README.pdf ./README-${{ github.event.inputs.release_ver }}-English.pdf
           mv ./README-Japanese.pdf ./README-${{ github.event.inputs.release_ver }}-Japanese.pdf
+          mv ./CHANGELOG.pdf ./CHANGELOG-${{ github.event.inputs.release_ver }}-English.pdf
+          mv ./CHANGELOG-Japanese.pdf ./CHANGELOG-${{ github.event.inputs.release_ver }}-Japanese.pdf
 
       - name: Upload Document Artifact
         if: matrix.os == 'macos-latest'
